@@ -6,7 +6,7 @@ u all need to work on backend
 Ansh
 The dark knight need to work on documentation but also help backend team when needed
 
-
+Priyanshu and Nikhil will work on frontend and co-ordination
 
 it is complusory to add 2 features to these file after forking and publish
 those who unable to do will be debarred from group project..

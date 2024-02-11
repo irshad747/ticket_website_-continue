@@ -40,3 +40,6 @@ As a support team member, I want to view tickets assigned to me, their prioritie
 @adarsh
 Dynamic FAQ updation:
 possible queries and its solution could be avaialbel under FAQ. Previous tickets problem with short solution could be available under FAQ.  
+
+Feadback button:
+users could provide a feedback to improve ticketing system.

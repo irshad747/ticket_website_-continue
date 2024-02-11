@@ -36,3 +36,7 @@ Feature 4: Personalized User Dashboard
 As a student, I want a personalized dashboard where I can view my past tickets, their statuses, and any relevant announcements or updates so that I have all my support-related information in one place.
 
 As a support team member, I want to view tickets assigned to me, their priorities, and statuses on my dashboard so that I can efficiently manage my workload.
+
+@adarsh
+Dynamic FAQ updation:
+possible queries and its solution could be avaialbel under FAQ. Previous tickets problem with short solution could be available under FAQ.  

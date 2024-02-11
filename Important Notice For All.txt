@@ -66,4 +66,4 @@ possible queries and its solution could be avaialbel under FAQ. Previous tickets
 
 => Feature 2: Search functionality (queries + limit searches to certain periods of time / time frame)
 
-=> 
+@priyanshuJain-32

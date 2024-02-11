@@ -15,3 +15,4 @@ those who unable to do will be debarred from group project..
 @Nikhil
 => Feature_1=+1  with every plus one ticket goes to more priority 
 => Feature_2=-1 if any matter is resolved than ticket goes to -1 section means same ticket can not be generated  remove confusion same topic but with diffenert headline
+@Test by Irshad

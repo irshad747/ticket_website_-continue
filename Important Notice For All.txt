@@ -15,3 +15,24 @@ those who unable to do will be debarred from group project..
 @Nikhil
 => Feature_1=+1  with every plus one ticket goes to more priority 
 => Feature_2=-1 if any matter is resolved than ticket goes to -1 section means same ticket can not be generated  remove confusion same topic but with diffenert headline
+@Irshad (The Dark Knight) 
+Features with their user Stories
+Feature 1: Ticket Status Tracking
+As a student, I want to check the status of my support ticket (e.g., open, in progress, closed) so that I know whether my query is being addressed and what to expect next.
+
+As a support team member, I need to update the status of tickets as they progress so that students are kept informed about their queries.
+
+Feature 2: Priority Tagging System
+As a support team member, I want to tag tickets with different priority levels (e.g., high, medium, low) based on the query's urgency so that we can manage our workload more effectively and respond to critical issues faster.
+
+As a student, I want my urgent issues to be recognized and addressed quickly so that it does not impact my studies.
+
+ Feature 3: Feedback System for Support Responses
+As a student, after my ticket has been resolved, I want to provide feedback on the support I received so that the support team can improve their service.
+
+As a support team leader, I want to review feedback from students to identify areas for training and improving our support processes.
+
+Feature 4: Personalized User Dashboard
+As a student, I want a personalized dashboard where I can view my past tickets, their statuses, and any relevant announcements or updates so that I have all my support-related information in one place.
+
+As a support team member, I want to view tickets assigned to me, their priorities, and statuses on my dashboard so that I can efficiently manage my workload.

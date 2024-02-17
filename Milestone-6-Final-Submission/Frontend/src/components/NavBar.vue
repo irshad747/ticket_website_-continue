@@ -6,11 +6,11 @@
       </router-link>
     </span>
     <span class="text-center" v-else>
-      <p class="h1 pt-2">{{ title }}</p>
+      <p class="h1 pt-2">{{ title }} </p>
     </span>
     <div class="position-relative ms-4 me-4 pb-3">
       <span>
-        <router-link to="/dash" v-if="role == 'student'">
+        <router-link :to="studentDashboardLink" v-if="role == 'student'">
           <img src="../assets/logo1.png" alt="Logo" width="110" height="60" class="d-inline-block align-text-top" />
         </router-link>
         <router-link to="/tag" v-else-if="role == 'admin'">
@@ -19,12 +19,16 @@
         <router-link :to="'/subject/' + subject_name" v-else>
           <img src="../assets/logo1.png" alt="Logo" width="110" height="60" class="d-inline-block align-text-top" />
         </router-link>
+        <p class="mb-0 ms-3">Welcome User, {{ username }}</p>
       </span>
       <form class="search" @submit.prevent="search_function" v-if="isSearch != false">
         <input class="search" type="text" id="search" placeholder="Search here...." v-model="search" />
         <button type="submit" class="btn btn-link"> <i class="bi bi-search"></i> </button>
       </form>
+      
       <div class="position-absolute top-0 end-0 mt-3">
+         <button class="btn btn-outline-light me-2">Discourse Forum</button>
+        <button class="btn btn-outline-light me-2">Create Ticket</button>
         <button @click="logout" style="font-size: large; color: whitesmoke" class="btn btn-danger">
           Logout <i class="bi bi-box-arrow-right"></i>
         </button>
@@ -41,10 +45,17 @@ export default {
     return {
       search: "",
       subject_name: localStorage.getItem("subject_name"),
-      role: localStorage.getItem("role")
+      role: localStorage.getItem("role"),
+      
     }
   },
-  props: ["title", "isSubject", "isSearch"],
+  props: ["title", "isSubject", "isSearch", "username"],
+  computed: {
+  studentDashboardLink() {
+    return `/dash/${this.username}`;
+  }
+},
+
   methods: {
     search_function() {
       return router.push(`/search/${this.search}`)
@@ -69,10 +80,11 @@ a {
 
 form.search {
   display: inline-block;
-  position: absolute;
-  left: 30%;
-  padding-top: .25rem;
-  margin-top: .5rem;
+  /* position: absolute; */
+  /* left: 30%; */
+  /* padding-top: .25rem; */
+  /* margin-top: .5rem; */
+  margin-left: auto;
   /* margin-left: 25%; */
   /* width: auto; */
 }

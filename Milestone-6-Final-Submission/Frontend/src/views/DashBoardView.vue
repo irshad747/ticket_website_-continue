@@ -1,13 +1,13 @@
 <template>
   <div class="pb-5">
-    <NavBar :title="title"></NavBar>
+    <NavBar :title="title" :username="username"></NavBar>
     <div v-if="!ready">
       <h1>Please wait Loading</h1>
     </div>
     <div class="row" v-else>
       <div class="col-sm-4" v-for="(faq, subject) in subjects" :key="subject">
         <div class="card mt-3" style="margin-left: 5%; margin-right: 5%">
-          <router-link :to="'/subject/' + subject">
+          <router-link :to="'/subject/' + subject + '/' + username">
             <h3 class="card-header text-center">
               {{ subject }}
             </h3>
@@ -50,6 +50,7 @@ export default {
       darkMode: false,
     };
   },
+  props: ["username"],
   methods: {},
   beforeRouteEnter(to, from, next) {
     const subject = localStorage.getItem("subject_name")

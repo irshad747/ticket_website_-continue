@@ -10,6 +10,7 @@ import TicketView from "../views/TicketView.vue";
 import TagView from "../views/TagView.vue";
 import RoleView from "../views/RoleView.vue";
 import RegisterAdmin from "../components/RegisterAdmin.vue";
+import ReviewPage from "../components/ReviewPage.vue"
 const routes = [
   { path: "/", name: "home", component: HomeView },
   {
@@ -24,13 +25,14 @@ const routes = [
   { path: "/register", name: "Register", component: RegisterStudent },
   { path: "/enroll", name: "Enroll", component: RegisterStaff },
   { path: "/test", name: "test", component: TestingAPI },
-  { path: "/dash", name: "Student dashboard", component: DashBoardView },
+  { path: "/dash/:username", name: "Student dashboard", component: DashBoardView, props: true },
   { path: "/tag", name: "tag Page", component: TagView },
   { path: "/role", name: "role Page", component: RoleView },
   {
-    path: "/subject/:subject",
+    path: "/subject/:subject/:username",
     name: "Subject Dashboard",
     component: SubjectView,
+    props: true
   },
   { path: "/ticket/:id", name: "Ticket Page", component: TicketView },
   { path: "/search/:search", name: "Search Page", component: SearchComp },
@@ -39,6 +41,12 @@ const routes = [
     name: "Register Admin",
     component: RegisterAdmin,
   },
+  {
+    path: '/review/:ticketId', 
+    name: 'ReviewPage',
+    component: ReviewPage,
+    props: true 
+  }
 ];
 
 const router = createRouter({

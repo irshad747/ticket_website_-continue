@@ -140,7 +140,7 @@ export default {
               else if (data.role == 'admin') {
                 return router.push(`/tag`)
               }
-              else { return router.push("/dash"); }
+              else { return router.push(`/dash/${data.user_id}`); }
 
             } else {
               this.errStatus = true;

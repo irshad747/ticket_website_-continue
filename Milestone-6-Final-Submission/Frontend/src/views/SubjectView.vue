@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar :title="title"></NavBar>
+    <NavBar :title="title" :username="username" ></NavBar>
     <SideBar @filter-change="tagFilter" @Reset="resetFilter" :reload="reload"></SideBar>
     <span class="btn-group btn-group-lg" style="margin-left: 20rem">
       <input type="radio" class="btn-check" value="faq" v-model="selectedOption" @change="FAQ" id="btnradio1" />
@@ -18,14 +18,20 @@
         <img src="../assets/notFound.jpg" alt="No image found">
         <h3>No tickets found under this section.</h3>
       </div>
-      <div class="row m-1" v-for="ticket in filtered_list" :key="ticket.title">
+
+      <div class="row m-1" v-for="ticket in filtered_list" :key="ticket.ticket_id">
         <div class="card position-relative" style="width: 84%; margin-left: 13rem; min-height: 4em">
           <div style="font-size: 2.5em" class="position-absolute">
-            {{ ticket.likes }}
+          {{ticket.ticket_id}}
+           
           </div>
           <div style="font-size: 1.5em; width: 90%; margin-left: 2.5em" class="mt-1">
             <div v-if="ticket.sec_name">
               <span class="badge bg-primary">{{ ticket.sec_name }}</span><br />
+              <span class="badge bg-primary">{{ ticket.ticket_status }}</span><br />
+               <button @click="increaseLikes(ticket.ticket_id)">+1</button>
+                {{ticket.Ticket_likes}}
+               <button @click="take_me_discourse(ticket)">discourse thread</button>
             </div>
             <router-link :to="'/ticket/' + ticket.ticket_id">{{ ticket.title }}</router-link>
           </div>
@@ -59,6 +65,7 @@ export default {
       role: localStorage.getItem("role")
     };
   },
+  props: ["username"],
   methods: {
     tagFilter(value) {
       this.reload = false;
@@ -67,6 +74,31 @@ export default {
     resetFilter() {
       this.filtered_list = this.ticket_list;
     },
+     increaseLikes(ticketId) {
+    fetch(`http://127.0.0.1:5500/api/ticket/${ticketId}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("access_token"),
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to increase likes');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Find the ticket in your local state and update its likes
+      const ticket = this.filtered_list.find(ticket => ticket.ticket_id === ticketId);
+      if (ticket) {
+        ticket.Ticket_likes = data.likes; // Update local likes count
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+  },
     FAQ() {
       this.reload = true;
       fetch(`http://127.0.0.1:5500/api/subject/${this.subject_name}?FAQ=True`, {

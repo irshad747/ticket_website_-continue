@@ -15,6 +15,8 @@ from Response_api_for_TM import Responses_api
 from Role_manager_api import Role_api
 from Tag_manager_api import Tag_api
 from Ticket_manager_api import Ticket_api
+from model import Response, Secondary_Tag, Subject_Tag, Ticket, User, db
+from flask import Flask, request, jsonify
 
 # Configurations
 app = Flask(__name__)
@@ -111,6 +113,24 @@ def notifyMail(role):
                        msg=render_template('mail_body_staff.html', username=staff.get('username'), ticket=ticket_data))
 
     return 'Success', 200
+@app.route('/api/ticket/<int:ticket_id>/like', methods=['POST'])
+def increase_ticket_likes(ticket_id):
+    ticket = Ticket.query.get(ticket_id)
+    if not ticket:
+        return jsonify({'message': 'Ticket not found'}), 404
+
+    # Convert Ticket_likes to int before incrementing
+    current_likes = int(ticket.Ticket_likes) if ticket.Ticket_likes else 0
+    ticket.Ticket_likes = current_likes + 1
+    
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Likes increased', 'likes': ticket.Ticket_likes}), 200
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error increasing likes for ticket {ticket_id}: {e}")
+        return jsonify({'message': 'Error updating ticket likes'}), 500
+
 
 
 if __name__ == "__main__":

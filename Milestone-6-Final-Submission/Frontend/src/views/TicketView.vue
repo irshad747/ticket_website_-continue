@@ -1,123 +1,63 @@
 <template>
   <NavBar :title="ticket_details.subject_name" isSubject="true"></NavBar>
-  <div class="container-fluid mt-1" style="width: 70%; margin: auto">
-
+  <div class="container mt-4">
     <!-- Question Card -->
-    <div class="d-flex">
-      <div class="card" style="min-height: 4em; width: 100%;">
-        <div class="card-header" :class="{
-          'bg-success': ticket_details.ticket_status == 'resolved',
-          'bg-danger': ticket_details.ticket_status == 'unresolved',
+    <div class="card shadow-sm mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center" :class="{
+          'bg-success text-white': ticket_details.ticket_status === 'resolved',
+          'bg-warning text-dark': ticket_details.ticket_status === 'unresolved',
         }">
-          <h5>Question</h5>
-        </div>
-        <div class="row">
-          <div class="col-1 d-flex flex-column align-items-center justify-content-center">
-            <i @click="like(ticket_details.ticket_id)" :class="[
-              'bi', isLiked ? 'bi-hand-thumbs-up-fill txt-color' : 'bi-hand-thumbs-up',
-            ]" style="font-size: 2rem" data-toggle="tooltip" data-placement="top" title="Like"></i>
-            <p>{{ likes }}</p>
-          </div>
-          <div class="col">
-            <div class="card-body">
-              <h5 class="card-title">{{ ticket_details.title }}</h5>
-              <p class="card-text">{{ ticket_details.description }}</p>
-              <div class="card-footer text-body-secondary">
-                Tags:
-                <div class="badge txt-button">
-                  {{ ticket_details.sec_name }}
-                </div>
-                <div class="badge txt-button">
-                  {{ ticket_details.ticket_status }}
-                </div>
-                <div v-if="ticket_details.isFAQ" class="badge txt-button">
-                  FAQ
-                </div>
-                <div v-if="duplicate" class="badge bg-danger">
-                  Duplicate
-                </div>
-              </div>
-            </div>
-          </div>
+        <span>{{ ticket_details.title }}</span>
+        <span class="badge" :class="{
+          'bg-success': ticket_details.isFAQ,
+          'bg-secondary': !ticket_details.isFAQ,
+        }">FAQ</span>
+      </div>
+      <div class="card-body">
+        <p>{{ ticket_details.description }}</p>
+        <div class="mt-3">
+          <span class="badge bg-primary me-2">{{ ticket_details.sec_name }}</span>
+          <span class="badge" :class="{
+  'bg-success': ticket_details.ticket_status === 'resolved',
+  'bg-danger': ticket_details.ticket_status === 'unresolved',
+}">{{ capitalize(ticket_details.ticket_status) }}</span>
+
         </div>
       </div>
-      <div v-if="role == 'admin'" class="d-flex ms-2 align-items-center justify-content-center"><i
-          @click="Delete(ticket_details.ticket_id)" class="bi bi-trash-fill text-danger" style="font-size: 2rem"
-          data-toggle="tooltip" data-placement="top" title="Delete"></i></div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <div>
+          <i @click="like(ticket_details.ticket_id)" class="bi" :class="[
+            isLiked ? 'bi-hand-thumbs-up-fill text-primary' : 'bi-hand-thumbs-up',
+          ]" style="cursor: pointer; font-size: 1.5rem;"></i>
+          <span class="ms-2">{{ likes }}</span>
+        </div>
+        <!-- New Buttons -->
+        <div>
+          <button @click="markAsResolved" class="btn btn-success me-2" v-if="ticket_details.ticket_status !== 'resolved'">Mark as Resolved</button>
+          <button @click="goToDiscourse" class="btn btn-secondary me-2">Go to Discourse</button>
+         <button @click="writeReview" class="btn btn-info">Write a Review</button>
 
-    </div>
-
-    <div class="d-flex justify-content-end">
-      <div v-if="!this.duplicate && this.role != 'student'">
-        <button v-if="!ticket_details.isFAQ" class="btn btn-primary m-3" @click="MarkFAQ(ticket_details.ticket_id)">Mark
-          FAQ</button>
-        <button v-if="ticket_details.isFAQ" class="btn btn-danger m-3" @click="UnMarkFAQ(ticket_details.ticket_id)">UnMark
-          FAQ</button>
-      </div>
-
-      <button v-if="!duplicate && this.role != 'student'" class="btn btn-danger m-3"
-        @click="MarkDuplicate(ticket_details.ticket_id)">Mark Duplicate</button>
-    </div>
-
-
-    <!-- Solution Card -->
-
-    <div v-if="ticket_details.ticket_status == 'resolved'" class="card m-3" style="min-height: 4em">
-      <div class="card-header bg-success">
-        <h5>Solution</h5>
-      </div>
-      <div class="row">
-
-        <div class="col">
-          <div class="card-body">
-            <p class="card-text">{{ true_response }}</p>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- Responses Card -->
-    <hr class="border border-success border-2 opacity-100" />
-    <h2>Responses</h2>
-    <div class="row p-3" v-for="response in response_list" :key="response.id">
-      <div class="card" :class="{ 'border-success': response.isAnswer }" style="min-height: 4em">
-        <div class="row">
-          <div class="col">
-
-            <div class="card-body">
-              <p class="card-title">{{ response.response }}</p>
-              <div v-if="ticket_details.user_id == current_user_id || role == 'admin'">
-                <div class="d-flex justify-content-end">
-                  <p class="card-text me-2" :class="{ 'h5 text-success': response.isAnswer }">
-                    Solution</p>
-                  <i @click="MarkAnswer(ticket_details.ticket_id, response.response_id)"
-                    :class="['bi', response.isAnswer == true ? 'bi-check-circle-fill text-success' : 'bi-check-circle',]"
-                    style="font-size: 1.2rem" data-toggle="tooltip" data-placement="top" title="Solution"></i>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end"><span class="text-secondary">Posted by: </span>
-                {{ response.username }}
-              </div>
-            </div>
-          </div>
+    <!-- Responses Section -->
+    <div>
+      <h5>Responses:</h5>
+      <div v-for="response in response_list" :key="response.id" class="card mb-3">
+        <div class="card-body">
+          {{ response.response }}
+          <footer class="blockquote-footer">Posted by: {{ response.username }}</footer>
         </div>
       </div>
     </div>
-    <div class="row m-3">
 
-      <!-- Response Form -->
-      <form v-if="ticket_details.ticket_status == 'unresolved'" @submit.prevent="AddResponse">
-        <div class="form-floating mb-3">
-          <textarea type="textarea" v-model="response_text" class="form-control" id="floatingContent"
-            placeholder="Please enter your Content" style="min-height: 8em" />
-          <label for="floatingContent">Type your Response here</label>
-        </div>
-
-        <div class="d-flex justify-content-center">
-          <button class="btn txt-button" style="color:whitesmoke" type="submit">Add Response</button>
-        </div>
+    <!-- Add Response Form -->
+    <div v-if="ticket_details.ticket_status === 'unresolved'">
+      <h5>Add Response:</h5>
+      <form @submit.prevent="AddResponse">
+        <textarea v-model="response_text" class="form-control mb-2" placeholder="Your response..."></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   </div>
@@ -196,6 +136,33 @@ export default {
           });
       }
     },
+    capitalize(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  },
+  async writeReview() {
+    // Example message to send
+    const message = 'Congratulations guyz webhook has been integrated i am signing off now';
+
+    try {
+      const response = await fetch('http://localhost:3000/send-to-gchat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log('Message successfully sent to Google Chat.');
+      } else {
+        console.error('Failed to send message to Google Chat.');
+      }
+    } catch (error) {
+      console.error('Error sending message to Google Chat:', error);
+    }
+  },
     like(id) {
       this.isLiked ? (this.likes -= 1) : (this.likes += 1),
         (this.isLiked = !this.isLiked);

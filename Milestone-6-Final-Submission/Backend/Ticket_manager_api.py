@@ -15,7 +15,8 @@ class Ticket_api(Resource):
                      "sec_name": fields.String(attribute=lambda x: Secondary_Tag.query.filter_by(sec_tag_id=x.sec_id).first().sec_tag_name),
                      "isFAQ": fields.Boolean,
                      "ticket_status": fields.String,
-                     "likes": fields.Integer(attribute=lambda x: len(x.likes))
+                     "likes": fields.Integer(attribute=lambda x: len(x.likes)),
+                     "Ticket_likes": fields.Integer(attribute="Ticket_likes")
                      }
 
     @jwt_required()

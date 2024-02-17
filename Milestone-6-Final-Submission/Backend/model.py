@@ -55,6 +55,7 @@ class Ticket(db.Model):
     sec_id = db.Column(db.String,
                        db.ForeignKey('Secondary_Tag.sec_tag_id'))
     response_list = db.relationship("Response", cascade="delete")
+    Ticket_likes = db.Column(db.Integer)
 
 
 class Table_likes(db.Model):

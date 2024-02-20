@@ -35,7 +35,9 @@
         <div>
           <button @click="markAsResolved" class="btn btn-success me-2" v-if="ticket_details.ticket_status !== 'resolved'">Mark as Resolved</button>
           <button @click="goToDiscourse" class="btn btn-secondary me-2">Go to Discourse</button>
-         <button @click="writeReview" class="btn btn-info">Write a Review</button>
+         <button @click="writeReview" class="btn btn-info">GChat</button>
+         <button @click="newReview" class="btn btn-info">Write a Review</button>
+
 
         </div>
       </div>
@@ -139,6 +141,10 @@ export default {
     capitalize(text) {
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
+  },
+  newReview(){
+    // Redirect to Review Page Component
+    this.$router.push({ name: 'ReviewPage', params: { ticketId: this.ticket_details.ticket_id } });
   },
   async writeReview() {
     // Example message to send
